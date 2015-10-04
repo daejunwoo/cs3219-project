@@ -22,8 +22,17 @@ gulp.task('copy', function(){
     .pipe(gulp.dest(path.DEST));
 });
 
-gulp.task('watch', function() {
-  gulp.watch(path.HTML, ['copy']);
+gulp.task('replaceHTMLsrc', function(){
+  gulp.src(path.HTML)
+    .pipe(htmlreplace({
+      'js': 'src/' + path.OUT
+    }))
+    .pipe(gulp.dest(path.DEST));
+});
+
+gulp.task('watch', ['replaceHTMLsrc'], function() {
+  // gulp.watch(path.HTML, ['copy']);
+  gulp.watch(path.HTML, ['replaceHTMLsrc']);
 
   var watcher  = watchify(browserify({
     entries: [path.ENTRY_POINT],
@@ -35,15 +44,13 @@ gulp.task('watch', function() {
   return watcher.on('update', function () {
     watcher.bundle()
       .pipe(source(path.OUT))
-      .pipe(gulp.dest(path.DEST_SRC))
+      .pipe(gulp.dest(path.DEST_SRC));
       console.log('Updated');
   })
     .bundle()
     .pipe(source(path.OUT))
     .pipe(gulp.dest(path.DEST_SRC));
 });
-
-gulp.task('default', ['watch']);
 
 gulp.task('build', function(){
   browserify({
@@ -65,3 +72,5 @@ gulp.task('replaceHTML', function(){
 });
 
 gulp.task('production', ['replaceHTML', 'build']);
+
+gulp.task('default', ['watch']);
