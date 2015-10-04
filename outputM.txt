@@ -1,0 +1,140 @@
+Chong	  Jia	  Wei	  	  	  	  	  	  jaewei.j.w@gmail.com	  
+Bachelor	  of	  Computing	  	  	  
+	  
+(Computer	  Science),	  Honours	  
+	  
+	  
+Catholic	  Junior	  College	  
+
+Education	  
+• 
+
+• 
+
+	  
+	  
+
+Aug	  2013	  –	  May	  2017	  
+
+Jan	  2011	  –	  Dec	  2012	  
+
+Skills	  
+
+Projects	  
+
+Modules	  Taken	  
+
+Windows,	  Mac,	  Microsoft	  PowerPoint,	  Microsoft	  Word,	  Microsoft	  Excel	  
+Programming	  languages:	  Java,	  C++	  
+Web	  langauges:	  HTML5,	  CSS,	  PHP,	  MySQL,	  JavaScript	  
+Frameworks:	  CodeIgniter,	  Angular.js,	  Bootstrap,	  jquery,	  d3.js	  
+Data	  Structures	  and	  Algorithms,	  Design	  and	  Analysis	  of	  Algorithms,	  Programming	  
+Methodology,	  Software	  Engineering,	  Interaction	  Design,	  	  Computer	  Graphics,	  Web	  
+Programming	  and	  Applications,	  Phenomena	  and	  Theories	  of	  Human-­‐Computer	  Interaction,	  
+Software	  Engineering	  Principles	  and	  Patterns.	  
+Improving	  National	  Olympiad	  in	  Informatics	  (NOI)	  website	  
+Designed	  website	  with	  bootstrap	  to	  match	  it	  with	  the	  university's	  website	  corporate	  
+theme	  so	  viewers	  do	  not	  feel	  lost.	  
+Created	  it	  as	  a	  cross-­‐platform	  single	  page	  application	  to	  improve	  user	  experience	  and	  
+performance	  time	  so	  website	  viewers	  can	  view	  website	  with	  ease	  on	  their	  
+smartphones	  and	  tablets.	  
+	  
+	  
+	  
+	  
+Static	  Program	  Analyser	  
+Create	  a	  Simple	  Parser	  Analysis	  with	  C++	  in	  a	  group	  of	  6	  over	  2	  semesters.	  
+Evaluate	  design	  decisions	  at	  architecture	  and	  implementation	  levels.	  
+Plan	  and	  construct	  multi-­‐level	  optimisation	  in	  processing	  and	  evaluating	  queries.	  
+	  Software	  Engineering	  introductory	  project	  
+Create	  a	  task	  manager	  application	  in	  Java,	  in	  a	  group	  of	  3	  for	  a	  semester.	  
+Constructed	  parser	  to	  use	  design	  patterns	  so	  application	  can	  be	  extended	  to	  take	  in	  
+more	  natural	  language	  input	  type.	  
+Plan,	  design	  and	  implement	  component	  with	  software	  engineering	  principles	  and	  
+OOP	  concept	  in	  mind.	  
+Document	  decisions	  and	  create	  a	  developer	  and	  user	  guide	  to	  communicate	  with	  
+future	  developers	  product	  architecture	  implementation	  objective.	  
+
+Aug	  2014	  –	  Dec	  2014	  
+
+Jan	  2015	  –	  May	  2015	  
+
+Jan	  2015	  –	  Nov	  2015	  
+
+• 
+
+• 
+
+• 
+• 
+• 
+
+• 
+• 
+
+• 
+
+• 
+
+	  
+	  
+
+	  
+	  
+
+Co-­‐Curricular	  Activities	  
+
+Welfare	  Director	  of	  Computing	  Club	  
+
+	  
+
+	  
+
+Sep	  2014	  –	  Aug	  2015	  
+
+	  
+Manage	  important	  bi-­‐annual	  events	  such	  as	  Welfare	  pack	  giveaways	  by	  purchasing	  
+snacks	  and	  organised	  30	  volunteers	  to	  hand	  out	  700	  welfare	  packs	  for	  5	  week.	  
+Welfare	  packs	  were	  given	  out	  at	  a	  rate	  of	  100	  packs	  in	  2	  hours	  for	  5	  consecutive	  days.	  
+Manage	  bi-­‐annual	  faculty	  textbook	  flea	  market,	  where	  an	  approximation	  of	  30	  to	  40	  
+books	  are	  sold	  every	  semester.	  This	  event	  helped	  students	  greatly	  lower	  their	  cost	  in	  
+purchasing	  recommended	  textbooks	  for	  their	  modules.	  
+Held	  spontaneous	  activities	  such	  as	  Rest	  &	  Relax	  (R&R)	  Night	  and	  Escape	  the	  Room,	  
+intended	  to	  help	  students	  unwind	  before	  the	  semester	  kicks	  off.	  An	  estimate	  of	  50	  
+participants	  attended	  each	  event.	  	  
+Helped	  promote	  School	  of	  Computing	  and	  clarify	  doubts	  in	  NUS	  Open	  Day	  and	  Tea	  
+Sessions.	  
+Volunteered	  in	  Freshman	  Orientation	  Projects	  	  	  
+Jun	  2014	  –	  Aug	  2014	  
+(FOP)	  and	  helped	  freshmen	  adapt	  to	  university	  life	  after	  camp	  
+Aug	  2013,	  Aug	  2014	  
+Give	  back	  to	  the	  community	  by	  putting	  up	  a	  	  
+performance	  in	  NUS	  RAG	  
+Fluent	  in	  English	  and	  understands	  Mandarin.	  
+Likes	  to	  watch	  others	  play	  video	  games.	  
+
+	  
+	  
+
+§ 
+
+§ 
+
+§ 
+
+§ 
+
+• 
+
+• 
+
+	  
+
+§ 
+§ 
+
+	  
+
+Additional	  Information	  
+
+
