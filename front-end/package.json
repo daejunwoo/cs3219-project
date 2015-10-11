@@ -21,6 +21,7 @@
     "watchify": "^3.4.0"
   },
   "dependencies": {
+    "react": "^0.13.3",
     "react-dropzone": "^2.1.0"
   }
 }
