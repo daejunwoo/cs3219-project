@@ -4,7 +4,8 @@ from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import TextConverter
 from pdfminer.layout import LAParams
 from pdfminer.pdfpage import PDFPage
-
+import extract as ex
+import string
 app = Flask(__name__)
 
 def convert(fname, pages=None):
@@ -30,6 +31,13 @@ def convert(fname, pages=None):
 @app.route('/')
 def hello():
   return convert('static/DesmondLim.pdf')
+
+@app.route('/keyword')
+def keyWordExtraction():  
+  rawText = convert('static/DesmondLim.pdf')
+  keyWords = ex.extractKeyWords(rawText)
+  s = "/".join(keyWords)
+  return s
   
 @app.route('/<name>')
 def hello_name(name):
