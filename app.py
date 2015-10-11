@@ -25,12 +25,12 @@ def convert(fname, pages=None):
   converter.close()
   text = output.getvalue()
   output.close
-  return text
+  return text.decode('utf8')
 
 @app.route('/')
 def hello():
-  return  convert('static/cv3.pdf')
-
+  return convert('static/DesmondLim.pdf')
+  
 @app.route('/<name>')
 def hello_name(name):
   return "Hello {}!".format(name)
