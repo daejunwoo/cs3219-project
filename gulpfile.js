@@ -8,7 +8,7 @@ var reactify = require('reactify');
 var streamify = require('gulp-streamify');
 
 var path = {
-  HTML: './templates/src/index.html',
+  HTML: 'templates/src/index.html',
   MINIFIED_OUT: 'build.min.js',
   OUT: 'build.js',
   DEST: 'dist',
@@ -25,7 +25,7 @@ gulp.task('copy', function(){
 gulp.task('replaceHTMLsrc', function(){
   gulp.src(path.HTML)
     .pipe(htmlreplace({
-      'js': './templates/src/' + path.OUT
+      'js': 'src/' + path.OUT
     }))
     .pipe(gulp.dest(path.DEST));
 });
