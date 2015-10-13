@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask,request
 from cStringIO import StringIO
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import TextConverter
@@ -42,6 +42,13 @@ def keyWordExtraction():
 @app.route('/<name>')
 def hello_name(name):
   return "Hello {}!".format(name)
+
+@app.route('/upload',methods=['POST'])
+def upload_file(name):
+  if request.method == 'POST':
+    file = request.files['file']
+    print file.filename
+  return convert(file.filename)
 
 if __name__ == '__main__':
   app.run()
