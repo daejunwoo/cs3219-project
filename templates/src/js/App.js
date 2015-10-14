@@ -46,7 +46,7 @@ var UploadBox = React.createClass({
   render: function() {
     return (
       <div>
-        <div style={titleStyle}>CS3219 Project - CViA</div>
+        <div>CS3219 Project - CViA</div>
         <br />
         <DropzoneDemo />
         <UploadFiles />
