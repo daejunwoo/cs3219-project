@@ -1,6 +1,6 @@
-
 from flask import Flask,request
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.cors import CORS, cross_origin
 import os
 from cStringIO import StringIO
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
@@ -11,6 +11,7 @@ import extract as ex
 import string
 
 app = Flask(__name__)
+cors = CORS(app)
 app.config.from_pyfile('config.py')
 db = SQLAlchemy(app)
 
@@ -50,10 +51,13 @@ def hello_name(name):
   return "Hello {}!".format(name)
 
 @app.route('/upload', methods=['POST'])
-def upload_file(name):
+@cross_origin()
+def upload_file():
+  #import pdb;
+  #pdb.set_trace()
   print "test"
   if request.method == 'POST':
-    file = request.files['file']
+    file = request.files['files']
     print file.filename
   return convert(file.filename)
 

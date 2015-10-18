@@ -7,7 +7,7 @@ var DropzoneDemo = React.createClass({
     console.log('Received files: ', files);
     var req = superagent.post('http://localhost:5000/upload');
     files.forEach((file)=> {
-        req.attach(file.name, file);
+        req.attach("files", file, file.name);
     });
     req.end(function(err, res){
       console.log("err", err);
