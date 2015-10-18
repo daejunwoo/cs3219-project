@@ -59,7 +59,7 @@ def upload_file():
   if request.method == 'POST':
     file = request.files['files']
     print file.filename
-  return convert(file.filename)
-
+  return jsonify({'status': 'created'}), 201
+  
 if __name__ == '__main__':
   app.run()
