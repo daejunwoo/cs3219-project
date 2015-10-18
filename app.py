@@ -49,8 +49,9 @@ def keyWordExtraction():
 def hello_name(name):
   return "Hello {}!".format(name)
 
-@app.route('/upload',methods=['POST'])
+@app.route('/upload', methods=['POST'])
 def upload_file(name):
+  print "test"
   if request.method == 'POST':
     file = request.files['file']
     print file.filename

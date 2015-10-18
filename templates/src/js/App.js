@@ -5,6 +5,14 @@ var superagent = require('superagent');
 var DropzoneDemo = React.createClass({
   onDrop: function(files) {
     console.log('Received files: ', files);
+    var req = superagent.post('http://localhost:5000/upload');
+    files.forEach((file)=> {
+        req.attach(file.name, file);
+    });
+    req.end(function(err, res){
+      console.log("err", err);
+      console.log("res", res);
+    });
     this.setState({
       files: files
     });
@@ -24,12 +32,14 @@ var UploadFiles = React.createClass({
     e.preventDefault();
     console.log("clicked upload");
 
-    /* superagent stuff
-      var req = superagent.post('/upload');
-      files.forEach((file)=> {
-          req.attach(file.name, file);
-      });
-      req.end(callback);
+    console.log(this.state.files);
+
+    /*
+    var req = superagent.post('/upload');
+    files.forEach((file)=> {
+        req.attach(file.name, file);
+    });
+    req.end(callback);
     */
   },
 
