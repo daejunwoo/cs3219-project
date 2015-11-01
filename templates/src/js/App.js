@@ -2,9 +2,37 @@ var React = require('react');
 var Dropzone = require('react-dropzone');
 var superagent = require('superagent');
 
-var DropzoneDemo = React.createClass({
+var Dz = React.createClass({
+  getInitialState: function() {
+    return {files: []}
+  },
+
+  componentDidMount: function(){
+    this.setState({files: this.state.files})
+  },
+
   onDrop: function(files) {
     console.log('Received files: ', files);
+    this.setState({files: files})
+  },
+
+  render: function() {
+    return (
+  	    <Dropzone onDrop={this.onDrop}>
+          <div>Drop or click to attach your Job Description and Resumes here.</div>
+        </Dropzone>
+        <UploadFiles files={this.state.files} />
+      </div>
+    )
+  }
+});
+
+var UploadFiles = React.createClass({
+  onUpload: function(e) {
+    e.preventDefault();
+    //console.log(this.props.files);
+    var files = this.props.files;
+
     var req = superagent.post('http://localhost:5000/upload');
     files.forEach((file)=> {
         req.attach("files", file, file.name);
@@ -13,34 +41,6 @@ var DropzoneDemo = React.createClass({
       console.log("err", err);
       console.log("res", res);
     });
-    this.setState({
-      files: files
-    });
-  },
-
-  render: function() {
-    return (
-	    <Dropzone onDrop={this.onDrop}>
-        <div>Try dropping some files here, or click to select files to upload.</div>
-      </Dropzone>
-    );
-  }
-});
-
-var UploadFiles = React.createClass({
-  onUpload: function(e) {
-    e.preventDefault();
-    console.log("clicked upload");
-
-    console.log(this.state.files);
-
-    /*
-    var req = superagent.post('/upload');
-    files.forEach((file)=> {
-        req.attach(file.name, file);
-    });
-    req.end(callback);
-    */
   },
 
   render: function() {
@@ -48,7 +48,7 @@ var UploadFiles = React.createClass({
       <form onSubmit={this.onUpload}>
         <input type="submit" value="Upload Files" />
       </form>
-    );
+    )
   }
 });
 
@@ -58,8 +58,7 @@ var UploadBox = React.createClass({
       <div>
         <div>CS3219 Project - CViA</div>
         <br />
-        <DropzoneDemo />
-        <UploadFiles />
+        <Dz />
       </div>
     );
   }
