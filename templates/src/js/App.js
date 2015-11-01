@@ -2,6 +2,10 @@ var React = require('react');
 var Dropzone = require('react-dropzone');
 var superagent = require('superagent');
 
+var Router = require('react-router').Router;
+var Route = require('react-router').Route;
+var Link = require('react-router').Link;
+
 var Dz = React.createClass({
   getInitialState: function() {
     return {files: []}
@@ -18,6 +22,7 @@ var Dz = React.createClass({
 
   render: function() {
     return (
+      <div>
   	    <Dropzone onDrop={this.onDrop}>
           <div>Drop or click to attach your Job Description and Resumes here.</div>
         </Dropzone>
@@ -30,7 +35,7 @@ var Dz = React.createClass({
 var UploadFiles = React.createClass({
   onUpload: function(e) {
     e.preventDefault();
-    //console.log(this.props.files);
+    console.log(this.props.files);
     var files = this.props.files;
     /*
     var req = superagent.post('http://localhost:5000/upload');
@@ -58,14 +63,30 @@ var UploadBox = React.createClass({
     return (
       <div>
         <div>CS3219 Project - CViA</div>
-        <br />
         <Dz />
       </div>
     );
   }
 });
 
+var Results = React.createClass({
+  render: function() {
+    return (
+      <div>
+        Results
+      </div>
+    );
+  }
+});
+
 React.render(
-  <UploadBox />
+  (
+    <Router>
+      <Route path="/" component={UploadBox}>
+        <Route path="results" component={Results} />
+      </Route>
+    </Router>
+  )
+  //<UploadBox />
   , document.getElementById('app')
 );
