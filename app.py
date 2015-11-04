@@ -21,6 +21,8 @@ cors = CORS(app)
 app.config.from_pyfile('config.py')
 db = SQLAlchemy(app)
 
+pdfText = []
+
 def convert(fname, pages=None):
   print fname
   if not pages:
@@ -44,7 +46,9 @@ def convert(fname, pages=None):
     interpreter.process_page(page)
     layout = device.get_result()
     
-    print parse_obj(layout._objs)
+    parse_obj(layout._objs)
+
+  ex.getExperience(pdfText)
 
   # text = output.getvalue()
   # return text.decode('utf8')
@@ -57,15 +61,18 @@ def parse_obj(lt_objs):
 
     # if it's a textbox, print text and location
     if isinstance(obj, pdfminer.layout.LTTextBoxHorizontal):
-      print "%6d, %6d, %s" % (obj.bbox[0], obj.bbox[1], obj.get_text().replace('\n', '_'))
+      #print "%6d, %6d, %s" % (obj.bbox[0], obj.bbox[1], obj.get_text().replace('\n', '_'))
+      text = obj.get_text().replace('\n', '_')
+      pdfText.append(text)
 
     # if it's a container, recurse
     elif isinstance(obj, pdfminer.layout.LTFigure):
-      parse_obj(obj._objs)  
+      parse_obj(obj._objs)
+
 
 @app.route('/')
 def hello():
-  return convert('static/DesmondLim.pdf')
+  return convert('static/YaminiBhaskar.pdf')
 
 @app.route('/keyword')
 def keyWordExtraction():  
