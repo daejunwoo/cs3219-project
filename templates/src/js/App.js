@@ -13,7 +13,7 @@ var useBasename = require('history').useBasename;
 
 var history = useBasename(createHistory)({
   basename: '/transitions'
-})
+});
 
 var Dz = React.createClass({
   getInitialState: function() {
@@ -76,7 +76,7 @@ var UploadFiles = React.createClass({
     var files = this.props.files;
 
     this.history.pushState(null, 'results');
-    /*
+    
     var req = superagent.post('http://localhost:5000/upload');
     files.forEach((file)=> {
         req.attach("files", file, file.name);
@@ -85,7 +85,7 @@ var UploadFiles = React.createClass({
       console.log("err", err);
       console.log("res", res);
     });
-    */
+    
   },
 
   render: function() {
@@ -130,14 +130,69 @@ var UploadBox = React.createClass({
 });
 
 var Results = React.createClass({
+  getInitialState: function() {
+    return {data: []};
+  },
+
+  componentDidMount: function() {
+    // loading results from server for initialization
+    this.loadResultsFromServer();
+  },
+
+  loadResultsFromServer: function() {
+    /*
+    superagent
+    .get('/results.json')
+    .end(function(err, res){
+      if (res) {
+        console.log("res: ", res);
+      } else {
+        console.log("err: ", err);
+      }
+    });
+    */
+  },
+
   render: function() {
     return (
       <div>
-        Results
+        <ResultList data={this.state.data} />
       </div>
     );
   }
 });
+
+var ResultList = React.createClass({
+    render: function() {
+      var resultNodes = this.props.data.map(function (result) {
+        return (
+          <Result name={result.name}>
+            {result.text}
+          </Result>
+          );
+      });
+      return (
+        <div>
+          {resultNodes}
+        </div>
+      );
+    }
+  });
+
+var Result = React.createClass({
+    render: function() {
+      // the marked library will take Markdown text and convert to raw HTML, sanitize: true tells marked to escape any HTML mark up instead of passing it through unchanged.
+      var rawMarkup = marked(this.props.children.toString(), {sanitize: true});
+      return (
+        <div>
+          <h2>
+            {this.props.name}
+          </h2>
+          <span dangerouslySetInnerHTML={{__html: rawMarkup}} />
+        </div>
+      );
+    }
+  });
 
 React.render(
   (
