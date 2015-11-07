@@ -56,8 +56,10 @@ def convertWithCoordinates(fname, pages=None):
     
     parse_obj(layout._objs)
 
-  ex.getExperience(pdfText)
-
+#ex.getExperience(pdfText)
+#ex.getLanguage(pdfText)
+#ex.getVolunteerExperience(pdfText)
+  ex.testCVDecorator(pdfText)
   return None
 
 def parse_obj(lt_objs):

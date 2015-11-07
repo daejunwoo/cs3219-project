@@ -16,10 +16,12 @@ def hello():
   return convertPDF.convert('static/YaminiBhaskar.pdf')
 
 @app.route('/keyword')
-def keyWordExtraction():  
-  rawText = convertPDF.convertWithCoordinates('static/DesmondLim.pdf')
-  keyWords = ex.extractKeyWords(rawText)
-  s = "/".join(keyWords)
+def keyWordExtraction():
+  s = ""
+  rawText = convertPDF.convertWithCoordinates('static/YaminiBhaskar.pdf')
+  #keyWords = ex.extractKeyWords(rawText)
+  #s = "/".join(keyWords)
+  print rawText
   return s
   
 @app.route('/<name>')
