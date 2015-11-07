@@ -32,13 +32,14 @@ var Dz = React.createClass({
   render: function() {
     var dzStyle = {
       textAlign: "center",
+      fontSize: 20,
       width: 200,
-      height: 200,
+      height: 150,
       borderWidth: 2,
       borderColor: '#003d7c',
       borderStyle: 'dashed',
       borderRadius: 5,
-      marginLeft: "44vw",
+      margin: "auto",
       padding: "10px",
       color: "white"
     };
@@ -56,8 +57,8 @@ var Dz = React.createClass({
         {this.state.files.length > 0 ? 
         <div style={parentStyle}>
           <h2>{this.state.files.length} file(s):</h2>
-          <div>{this.state.files.map((file) => <p>{file.name}</p> )}</div>
-
+          <div>{this.state.files.map((file) => <p key={file.name}>{file.name}</p> )}</div>
+          <br />
           <UploadFiles files={this.state.files} />
         </div>
         : null}
