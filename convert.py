@@ -9,6 +9,7 @@ from pdfminer.pdfpage import PDFPage, PDFTextExtractionNotAllowed
 from pdfminer.pdfdevice import PDFDevice
 import extract as ex
 import pdfminer
+import math
 
 def convert(fname, pages=None):
   print fname
@@ -19,7 +20,7 @@ def convert(fname, pages=None):
   output = StringIO()
   manager = PDFResourceManager()
 
-  converter = TextConverter(manager, output, laparams=LAParams(word_margin = 0.1))
+  converter = TextConverter(manager, output, laparams=LAParams(word_margin = 0.1, line_margin = 0.1))
   interpreter = PDFPageInterpreter(manager, converter)
   infile = file(fname, 'rb')
   for page in PDFPage.get_pages(infile, pagenums):
@@ -30,9 +31,10 @@ def convert(fname, pages=None):
   output.close
   return text.decode('utf8')
 
-pdfText = []
-
 def convertWithCoordinates(fname, pages=None):
+  fontSize = {}
+  pdfText = []
+
   print fname
   if not pages:
     pagenums = set()
@@ -46,7 +48,7 @@ def convertWithCoordinates(fname, pages=None):
   laparams = LAParams()
 
   manager = PDFResourceManager()
-  device = PDFPageAggregator(manager, laparams=laparams)
+  device = PDFPageAggregator(manager, laparams=LAParams(word_margin = 0.1, line_margin = 0.1))
 
   interpreter = PDFPageInterpreter(manager, device)
 
@@ -54,24 +56,27 @@ def convertWithCoordinates(fname, pages=None):
     interpreter.process_page(page)
     layout = device.get_result()
     
-    parse_obj(layout._objs)
+    parse_obj(layout._objs, fontSize, pdfText)
 
-#ex.getExperience(pdfText)
-#ex.getLanguage(pdfText)
-#ex.getVolunteerExperience(pdfText)
-  ex.testCVDecorator(pdfText)
-  return None
+  return {'fontSize': fontSize, 'pdfText': pdfText}
 
-def parse_obj(lt_objs):
+def parse_obj(lt_objs, fontSize, pdfText):
 
   # loop over the object list
   for obj in lt_objs:
 
     # if it's a textbox, print text and location
     if isinstance(obj, pdfminer.layout.LTTextBoxHorizontal):
-      #print "%6d, %6d, %s" % (obj.bbox[0], obj.bbox[1], obj.get_text().replace('\n', '_'))
-      text = obj.get_text().replace('\n', '_')
-      pdfText.append(text)
+      height = math.floor(obj.height)
+      if fontSize.has_key(height):
+        count = fontSize[height]
+        fontSize[height] = count + 1
+      else:
+        fontSize[height] = 1
+      text = obj.get_text().replace('\n', '')
+      # print ("height: %6d , count: %6d" %(height, fontSize[height]))
+      lineTuple = (height, text)
+      pdfText.append(lineTuple)
 
     # if it's a container, recurse
     elif isinstance(obj, pdfminer.layout.LTFigure):

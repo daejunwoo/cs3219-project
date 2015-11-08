@@ -24,10 +24,6 @@ def keyWordExtraction():
   print rawText
   return s
   
-@app.route('/<name>')
-def hello_name(name):
-  return "Hello {}!".format(name)
-
 @app.route('/upload', methods=['POST'])
 @cross_origin()
 def upload_file():
