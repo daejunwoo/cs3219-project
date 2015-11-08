@@ -39,8 +39,7 @@ def language_dec(func):
                 str = str + row
                 first = False
             else:
-                str = str + "," + row
-    
+                str = str + "," + row   
         str = str + "]"
         prvStr = func(text)
         return prvStr + str
@@ -58,12 +57,28 @@ def experience_dec(func):
                 first = False
             else:
                 str = str + "\n," + row
-    
-    #str = str + "{'title':coder,'company':nus}"
         str = str + "]"
         prvStr = func(text)
         return prvStr + str
     return func_wrapper
+
+def skills_dec(func):
+    def func_wrapper(text):
+        table = getSkillSets(text)
+        str = ",\n'Skills & Expertise':[\n"
+        first = True
+        #aggregate experience
+        for row in table:
+            if first:
+                str = str + row
+                first = False
+            else:
+                str = str + "," + row  
+        str = str + "]"
+        prvStr = func(text)
+        return prvStr + str
+    return func_wrapper
+
 
 def testCVDecorator(text):
     temp = get_base
@@ -164,6 +179,9 @@ def getName(text):
     Name = text[0].split("_",1)[0]
     return Name
 
+
+
+
 def getVolunteerExperience(text):
     tempDate = ""
     tempDuration = ""
@@ -173,6 +191,8 @@ def getVolunteerExperience(text):
     start,end = detectStartEndLine(text,"Volunteer Experience")
     output = text[start].split("Volunteer Experience_",1)
     
+    for i in range(start,end):
+        print text[i]
     #volunteer experience section found
     if(len(output)> 1):
         
@@ -203,6 +223,22 @@ def getVolunteerExperience(text):
     else:
         pass
     return jobTable
+
+def getSkillSets(text):
+    skillsTable = []
+    start,end = detectStartEndLine(text,"Skills & Expertise")
+    raw = text[start].split("Skills & Expertise_",1)[1]
+    while(1):
+        output = raw.split("_",1)
+        if(len(output)>1):
+            #print output[0]
+            skillsTable.append(output[0])
+            raw = output[1]
+        else:
+            #print output[0]
+            break
+
+    return skillsTable
 
 def getLanguage(text):
     languageTable = []

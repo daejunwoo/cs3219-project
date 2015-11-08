@@ -28,10 +28,19 @@ def hello():
 @app.route('/keyword')
 def keyWordExtraction():
   s = ""
-  rawText = convertPDF.convertWithCoordinates('static/YaminiBhaskar.pdf')
-  #keyWords = ex.extractKeyWords(rawText)
-  #s = "/".join(keyWords)
-  print rawText
+  rawText = convertPDF.convertWithCoordinatesPara('static/DonnabelleEmbodo.pdf')
+  temp = ex.get_base
+
+  # dec = ex.experience_dec
+  # temp = dec(temp)
+
+  dec = ex.language_dec
+  temp = dec(temp)
+
+  dec = ex.skills_dec
+  temp = dec(temp)
+  print temp(rawText['pdfText'])
+
   return s
   
 @app.route('/upload', methods=['POST'])
