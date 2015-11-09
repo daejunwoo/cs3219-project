@@ -21,7 +21,12 @@ var UploadForm = React.createClass({
       files: [],
       jobTitle: "",
       skills: "",
-      more: ""
+      other1: "",
+      other1value: "",
+      other2: "",
+      other2value: "",
+      other3: "",
+      other3value: "",
     }
   },
 
@@ -38,7 +43,27 @@ var UploadForm = React.createClass({
   },
 
   handleChange3: function(e) {
-    this.setState({more: e.target.value});
+    this.setState({other1: e.target.value});
+  },
+
+  handleChange4: function(e) {
+    this.setState({other1value: e.target.value});
+  },
+
+  handleChange5: function(e) {
+    this.setState({other2: e.target.value});
+  },
+
+  handleChange6: function(e) {
+    this.setState({other2value: e.target.value});
+  },
+
+  handleChange7: function(e) {
+    this.setState({other3: e.target.value});
+  },
+
+  handleChange8: function(e) {
+    this.setState({other3value: e.target.value});
   },
 
   onDrop: function(files) {
@@ -78,11 +103,28 @@ var UploadForm = React.createClass({
     return (
       <div style={formStyle}>
         <div style={fieldsStyle}>
-          Job Title:<br /><input type="text" value={this.state.jobTitle} placeholder="Who?" onChange={this.handleChange1} />
-          <br /><br />
-          Skills:<br /><textarea type="text" value={this.state.skills} placeholder="What?" onChange={this.handleChange2} />
-          <br /><br />
-          Others:<br /><textarea type="text" value={this.state.more} placeholder="Anything else?" onChange={this.handleChange3} />
+          <table>
+            <tr>
+              <td>Job Title:</td>
+              <td><input type="text" value={this.state.jobTitle} placeholder="Who?" onChange={this.handleChange1} /></td>
+            </tr>
+            <tr>
+              <td>Skills (separate by comma):</td>
+              <td><textarea type="text" value={this.state.skills} placeholder="What?" onChange={this.handleChange2} /></td>
+            </tr>
+            <tr>
+              <td><input type="text" value={this.state.other1} placeholder="<fill in heading>" onChange={this.handleChange3} />:</td>
+              <td><input type="text" value={this.state.other1value} placeholder="<fill in description>" onChange={this.handleChange4} /></td>
+            </tr>
+            <tr>
+              <td><input type="text" value={this.state.other2} placeholder="<fill in heading>" onChange={this.handleChange5} />:</td>
+              <td><input type="text" value={this.state.other2value} placeholder="<fill in description>" onChange={this.handleChange6} /></td>
+            </tr>
+            <tr>
+              <td><input type="text" value={this.state.other3} placeholder="<fill in heading>" onChange={this.handleChange7} />:</td>
+              <td><input type="text" value={this.state.other3value} placeholder="<fill in description>" onChange={this.handleChange8} /></td>
+            </tr>
+          </table>
         </div>
 
         <Dropzone onDrop={this.onDrop} style={dzStyle}>
@@ -94,7 +136,8 @@ var UploadForm = React.createClass({
           <h2>{this.state.files.length} file(s):</h2>
           <div>{this.state.files.map((file) => <p key={file.name}>{file.name}</p> )}</div>
           <br />
-          <UploadFiles files={this.state.files} jobTitle={this.state.jobTitle} skills={this.state.skills} more={this.state.more} />
+          <UploadFiles files={this.state.files} jobTitle={this.state.jobTitle} skills={this.state.skills} other1={this.state.other1} other1value={this.state.other1value} other2={this.state.other2}
+            other2value={this.state.other2value} other3={this.state.other3} other3value={this.state.other3value} />
         </div>
         : null}
       </div>
@@ -116,7 +159,12 @@ var UploadFiles = React.createClass({
 
     req.field("title", this.props.jobTitle);
     req.field("skills", this.props.skills);
-    req.field("more", this.props.more);
+    req.field("other1", this.props.other1);
+    req.field("other1value", this.props.other1value);
+    req.field("other2", this.props.other2);
+    req.field("other2value", this.props.other2value);
+    req.field("other3", this.props.other3);
+    req.field("other3value", this.props.other3value);
 
     files.forEach((file)=> {
         req.attach("files", file, file.name);
