@@ -16,6 +16,10 @@ cors = CORS(app)
 app.config.from_pyfile('config.py')
 db = SQLAlchemy(app)
 
+title_multiplier = 0
+skills_multiplier = 0
+more_multiplier = 0
+
 @app.route('/analyzer')
 def analyzeCV():
   description = {'Title': 'Software Engineer', 'Skill': ['Microsoft Office', 'Data Mining', 'Image Processing'], 'Certification': 'Random value', 'Volunteering': 'Random value'}
@@ -106,6 +110,9 @@ def keyWordExtraction():
 @cross_origin()
 def upload_file():
   if request.method == 'POST':
+    title_multiplier = request.form['title']
+    skills_multiplier = request.form['skills']
+    more_multiplier = request.form['more']
     upload_files = request.files.getlist("files")
 
     #clear static directory
@@ -121,9 +128,10 @@ def upload_file():
     for file in upload_files:
       filename = file.filename
       save_path = os.path.dirname(os.path.abspath(__file__))+'/static/'
-      file.save(save_path+filename )
+      file.save(save_path+filename)
       #print json.dumps(convertPDF.convertWithCoordinatesPara('static/'+ filename))
   # # return jsonify({'status': 'created'}), 201
+
   
 if __name__ == '__main__':
   app.debug = True
