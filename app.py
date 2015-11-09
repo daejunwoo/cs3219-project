@@ -4,28 +4,36 @@ from flask.ext.cors import CORS, cross_origin
 import os
 import convert as convertPDF
 import extract as ex
+import analyze as analyzer
 import string
+import json
 
 app = Flask(__name__)
 cors = CORS(app)
 app.config.from_pyfile('config.py')
 db = SQLAlchemy(app)
 
+@app.route('/analyzer')
+def analyzeCV():
+  description = {'Title': 'Software Engineer', 'Skill': ['Microsoft Office', 'Data Mining', 'Image Processing'], 'Certification': 'Random value', 'Volunteering': 'Random value'}
+  resume = [{'Name': 'Tom', 'Title': 'Software Engineer at NUS', 'Experience': [{'Title': 'Software Engineer'}], 'Skill': ['Microsoft Office', 'Data Mining'], 'Certification': 'Random value', 'Volunteering': 'Random value'}, {'Name': 'Sam', 'Title': 'Software Engineer at NUS', 'Experience': [{'Title': 'Software Engineer'}], 'Skill': ['Microsoft Office', 'Data Mining'], 'Certification': 'Random value'}]
+  multiplier = analyzer.assign_key_multipler(description)
+  result = analyzer.process_cv(resume, multiplier, description)
+  return json.dumps(result)
+
 @app.route('/')
 def hello():
   return convertPDF.convert('static/YaminiBhaskar.pdf')
 
 @app.route('/keyword')
-def keyWordExtraction():  
-  rawText = convertPDF.convertWithCoordinates('static/DesmondLim.pdf')
-  keyWords = ex.extractKeyWords(rawText)
-  s = "/".join(keyWords)
+def keyWordExtraction():
+  s = ""
+  rawText = convertPDF.convertWithCoordinates('static/YaminiBhaskar.pdf')
+  #keyWords = ex.extractKeyWords(rawText)
+  #s = "/".join(keyWords)
+  print rawText
   return s
   
-@app.route('/<name>')
-def hello_name(name):
-  return "Hello {}!".format(name)
-
 @app.route('/upload', methods=['POST'])
 @cross_origin()
 def upload_file():
