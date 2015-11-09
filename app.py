@@ -33,8 +33,9 @@ def keyWordExtraction():
   description = {'Title': 'Software Engineer', 'Skill': ['Microsoft Office', 'Data Mining', 'Image Processing','Android','MySQL'], 'Certification': 'Random value', 'Volunteering': 'Random value'}
   resumesInput = []
   resumes = []
+  decorators = {'Skill':ex.skills_dec , 'Language':ex.language_dec}
   extractor = ex.get_base
-  decorator = ex.skills_dec
+  decorator = decorators["Language"]
   extractor = decorator(extractor)
 
   resumesInput.append('static/IsenNg.pdf')
@@ -63,7 +64,7 @@ def keyWordExtraction():
   #print forAnalyzer
   result = analyzer.process_analyzer(description, forAnalyzer)
 
-  return json.dumps(result)
+  return output
   
 @app.route('/upload', methods=['POST'])
 @cross_origin()
