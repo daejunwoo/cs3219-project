@@ -11,26 +11,6 @@ import extract as ex
 import pdfminer
 import math
 
-def convert(fname, pages=None):
-  print fname
-  if not pages:
-    pagenums = set()
-  else:
-    pagenums = set(pages)
-  output = StringIO()
-  manager = PDFResourceManager()
-
-  converter = TextConverter(manager, output, laparams=LAParams(word_margin = 0.1, line_margin = 0.1))
-  interpreter = PDFPageInterpreter(manager, converter)
-  infile = file(fname, 'rb')
-  for page in PDFPage.get_pages(infile, pagenums):
-    interpreter.process_page(page)
-  infile.close()
-  converter.close()
-  text = output.getvalue()
-  output.close
-  return text.decode('utf8')
-
 def convertWithCoordinates(fname, pages=None):
   fontSize = {}
   pdfText = []

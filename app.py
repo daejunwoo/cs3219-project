@@ -16,16 +16,13 @@ cors = CORS(app)
 app.config.from_pyfile('config.py')
 db = SQLAlchemy(app)
 
-title_multiplier = 0
-skills_multiplier = 0
-more_multiplier = 0
+job_description = {}
 
 @app.route('/analyzer')
 def analyzeCV():
   description = {'Title': 'Software Engineer', 'Skill': ['Microsoft Office', 'Data Mining', 'Image Processing'], 'Certification': 'Random value', 'Volunteering': 'Random value'}
   #resume = [{'Name': 'Tom', 'Title': 'Software Engineer at NUS', 'Experience': [{'Title': 'Software Engineer'}], 'Skill': ['Microsoft Office', 'Data Mining'], 'Certification': 'Random value', 'Volunteering': 'Random value'}, {'Name': 'Sam', 'Title': 'Software Engineer at NUS', 'Experience': [{'Title': 'Software Engineer'}], 'Skill': ['Microsoft Office', 'Data Mining']}]
   
-
   #setup extractor with base and decorators
   decorators = {'Skill':ex.skills_dec , 'Language':ex.language_dec}
   decorators = {'Skill':ex.skills_dec , 'Language':ex.language_dec}
@@ -64,9 +61,7 @@ def analyzeCV():
 
 @app.route('/')
 def hello():
-  # return convertPDF.convertWithCoordinatesPara('static/YaminiBhaskar.pdf')
   return json.dumps(convertPDF.convertWithCoordinatesPara('static/YaminiBhaskar.pdf'))
-
 
 @app.route('/keyword')
 def keyWordExtraction():
@@ -130,9 +125,8 @@ def upload_file():
       save_path = os.path.dirname(os.path.abspath(__file__))+'/static/'
       file.save(save_path+filename)
       #print json.dumps(convertPDF.convertWithCoordinatesPara('static/'+ filename))
-  # # return jsonify({'status': 'created'}), 201
+  return json.dumps({'status': '200'})
 
-  
 if __name__ == '__main__':
   app.debug = True
   app.run()
