@@ -216,6 +216,10 @@ var Results = React.createClass({
 
 var ResultList = React.createClass({
     render: function() {
+      var conStyle = {
+        textAlign: "center"
+      };
+
       var titleStyle = {
         fontSize: 30,
         color: "#003d7c",
@@ -231,7 +235,7 @@ var ResultList = React.createClass({
       });
 
       return (
-        <div>
+        <div style={conStyle}>
           <div style={titleStyle}>Name | Score</div>
           {resultNodes}
         </div>
@@ -243,15 +247,20 @@ var Result = React.createClass({
     render: function() {
       var rankStyle = {
         color: "white",
-        fontFamily: "HelveticaNeue-Light"
+        fontFamily: "HelveticaNeue-Light",
+        fontSize: 20
+      };
+
+      var scoreStyle  = {
+        display: "inline-block"
       };
 
       // the marked library will take Markdown text and convert to raw HTML, sanitize: true tells marked to escape any HTML mark up instead of passing it through unchanged.
       var rawMarkup = marked(this.props.children.toString(), {sanitize: true});
       
       return (
-        <div>
-            {this.props.name} | <span dangerouslySetInnerHTML={{__html: rawMarkup}} />
+        <div style={rankStyle}>
+            {this.props.name} | <span style={scoreStyle} dangerouslySetInnerHTML={{__html: rawMarkup}} />
         </div>
       );
     }
