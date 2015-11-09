@@ -15,13 +15,30 @@ var history = useBasename(createHistory)({
   basename: '/transitions'
 });
 
-var Dz = React.createClass({
+var UploadForm = React.createClass({
   getInitialState: function() {
-    return {files: []}
+    return {
+      files: [],
+      jobTitle: "",
+      skills: "",
+      more: ""
+    }
   },
 
   componentDidMount: function(){
-    this.setState({files: this.state.files})
+    this.setState({files: this.state.files});
+  },
+
+  handleChange1: function(e) {
+    this.setState({jobTitle: e.target.value});
+  },
+
+  handleChange2: function(e) {
+    this.setState({skills: e.target.value});
+  },
+
+  handleChange3: function(e) {
+    this.setState({more: e.target.value});
   },
 
   onDrop: function(files) {
@@ -38,7 +55,8 @@ var Dz = React.createClass({
       borderColor: '#003d7c',
       borderStyle: 'dashed',
       borderRadius: 5,
-      margin: "auto",
+      //margin: "auto",
+      float: "right",
       padding: "10px",
       color: "white"
     };
@@ -47,18 +65,36 @@ var Dz = React.createClass({
       color: "white"
     };
 
+    var fieldsStyle = {
+      float: "left"
+    };
+
+    var formStyle = {
+      padding: "100px",
+      width: "50vw",
+      margin: "auto"
+    };
+
     return (
-      <div>
-  	    <Dropzone onDrop={this.onDrop} style={dzStyle}>
-          <div>Simply drop or click to attach your Job Description and Resumes here.</div>
+      <div style={formStyle}>
+        <div style={fieldsStyle}>
+          Job Title:<br /><input type="text" value={this.state.jobTitle} placeholder="Who?" onChange={this.handleChange1} />
+          <br /><br />
+          Skills:<br /><textarea type="text" value={this.state.skills} placeholder="What?" onChange={this.handleChange2} />
+          <br /><br />
+          Others:<br /><textarea type="text" value={this.state.more} placeholder="Anything else?" onChange={this.handleChange3} />
+        </div>
+
+        <Dropzone onDrop={this.onDrop} style={dzStyle}>
+          <div>Simply drop or click to attach the Resumes here.</div>
         </Dropzone>
-        
+
         {this.state.files.length > 0 ? 
         <div style={parentStyle}>
           <h2>{this.state.files.length} file(s):</h2>
           <div>{this.state.files.map((file) => <p key={file.name}>{file.name}</p> )}</div>
           <br />
-          <UploadFiles files={this.state.files} />
+          <UploadFiles files={this.state.files} jobTitle={this.state.jobTitle} skills={this.state.skills} more={this.state.more} />
         </div>
         : null}
       </div>
@@ -75,15 +111,26 @@ var UploadFiles = React.createClass({
     var files = this.props.files;
 
     this.history.pushState(null, 'results');
-    
+
     var req = superagent.post('http://localhost:5000/upload');
+
+    req.field("title", this.props.jobTitle);
+    req.field("skills", this.props.skills);
+    req.field("more", this.props.more);
+
     files.forEach((file)=> {
         req.attach("files", file, file.name);
     });
+
     req.end(function(err, res){
-      console.log("error posting resumes", err);
-      console.log("success posting resumes", res);
+      if (res) {
+        console.log("res", res);
+        //this.history.pushState(null, 'results');
+      } else {
+        console.log("err", err);
+      }
     });
+    
   },
 
   render: function() {
@@ -120,8 +167,7 @@ var UploadBox = React.createClass({
     return (
       <div style={parentStyle}>
         <div style={titleStyle}>CS3219 Project - CViA</div>
-        <br />
-        <Dz />
+        <UploadForm />
       </div>
     );
   }
@@ -142,6 +188,7 @@ var Results = React.createClass({
     .get('http://localhost:5000/analyzer')
     .end(function(err, res){
       if (res) {
+        //console.log(res);
         this.setState({data: JSON.parse(res.text)});
       } else {
         console.log("error loading results from server: ", err);
@@ -154,8 +201,8 @@ var Results = React.createClass({
       color: "white",
       background: "#003d7c",
       fontSize: 50,
-      textAlign: "center",
-      fontFamily: "HelveticaNeue-Light"
+      fontFamily: "HelveticaNeue-Light",
+      textAlign: "center"
     };
 
     return (
@@ -168,59 +215,47 @@ var Results = React.createClass({
 });
 
 var ResultList = React.createClass({
-  render: function() {
-    var tableStyle = {
-      margin: "auto",
-      padding: 50,
-      fontFamily: "HelveticaNeue-Light",
-      fontSize: 20,
-      color: "white"
-    };
+    render: function() {
+      var titleStyle = {
+        fontSize: 30,
+        color: "#003d7c",
+        fontFamily: "HelveticaNeue-Light"
+      };
 
-    var headStyle = {
-      color: "#003d7c"
-    };
+      var resultNodes = this.props.data.map(function (result) {
+        return (
+          <Result name={result.Name}>
+            {result.Score}
+          </Result>
+          );
+      });
 
-    var resultNodes = this.props.data.map(function (result) {
       return (
-        <Result name={result.Name}>
-          {result.Score}
-        </Result>
+        <div>
+          <div style={titleStyle}>Name | Score</div>
+          {resultNodes}
+        </div>
       );
-    });
-    
-    return (
-      <div>
-        <table style={tableStyle}>
-          <thead style={headStyle}>
-            <th>Name | Score</th>
-          </thead>
-          <tbody>
-              {resultNodes}
-          </tbody>
-        </table>
-      </div>
-    );
-  }
-});
+    }
+  });
 
 var Result = React.createClass({
-  render: function() {
-    var scoreStyle = {
-      display: "inline-block",
-      right: 0
-    };
+    render: function() {
+      var rankStyle = {
+        color: "white",
+        fontFamily: "HelveticaNeue-Light"
+      };
 
-    // the marked library will take Markdown text and convert to raw HTML, sanitize: true tells marked to escape any HTML mark up instead of passing it through unchanged.
-    var rawMarkup = marked(this.props.children.toString(), {sanitize: true});
-
-    return (
-      <div>
-        {this.props.name} - <span style={scoreStyle} dangerouslySetInnerHTML={{__html: rawMarkup}} />
-      </div>
-    );
-  }
-});
+      // the marked library will take Markdown text and convert to raw HTML, sanitize: true tells marked to escape any HTML mark up instead of passing it through unchanged.
+      var rawMarkup = marked(this.props.children.toString(), {sanitize: true});
+      
+      return (
+        <div>
+            {this.props.name} | <span dangerouslySetInnerHTML={{__html: rawMarkup}} />
+        </div>
+      );
+    }
+  });
 
 React.render(
   (
