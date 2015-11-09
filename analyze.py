@@ -1,5 +1,4 @@
 import string
-from collections import OrderedDict
 
 header_title = 'Title'
 header_experience = 'Experience'
@@ -43,14 +42,15 @@ def process_cv(extracted_resumes, key_multipler, job_description):
                 title_count += key_multipler[multipler]
 
       # Matching skills
-      elif resume.has_key(header_skill)  and multipler == header_skill:
-        for skill in resume[header_skill]:
-          if skill in job_description[header_skill]:
-            skill_count += key_multipler[multipler]
+      elif resume.has_key(header_skill) and multipler == header_skill:
+        skill_count += recurse_obj(resume[multipler], job_description[multipler], multipler) * key_multipler[multipler]
 
       elif resume.has_key(multipler):
-        if job_description[multipler] in resume[multipler]:
-          generic_count += key_multipler[multipler]
+        if isinstance(resume[multipler], list):
+          generic_count += recurse_obj(resume[multipler], job_description[multipler], multipler) * key_multipler[multipler]
+        elif isinstance(resume[multipler], basestring):
+          if job_description[multipler] in resume[multipler]:
+            generic_count += key_multipler[multipler]
 
     score = title_count+skill_count+generic_count
     result_list.append({'Name': resume['Name'], 'Score': round(score, 2)})
@@ -59,10 +59,17 @@ def process_cv(extracted_resumes, key_multipler, job_description):
   result_list = (sorted(result_list, key=lambda  t: t.get('Score', 0), reverse=True))
   return result_list
 
-def process_analyzer(job_description, extracted_resumes):
+def recurse_obj(resume_obj, description_obj, header):
+  count = 0
+  for item in resume_obj:
+    if item in description_obj:
+      count += 1
+  return count
 
-  key_multipler = process_job_description(job_description)
-  result_list = process_cv(extracted_resumes, key_multipler, job_description)
+def process_analyzer(job_description, extracted_resumes):
+  key_multipler = assign_key_multipler(job_description)
+  return process_cv(extracted_resumes, key_multipler, job_description)
+
 
 
 

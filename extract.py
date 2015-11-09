@@ -3,7 +3,7 @@ import operator
 import re
 import string
 
-headerKey = ["Experience","Volunteer Experience","Projects","Languages","Certifications","Skills & Expertise","Education","Interests"]
+headerKey = ["Experience","Volunteer Experience","Projects","Languages","Certifications","Skills & Expertise","Education","Interests","Publications"]
 
 
 def get_base(text):
@@ -39,8 +39,7 @@ def language_dec(func):
                 str = str + row
                 first = False
             else:
-                str = str + "," + row
-    
+                str = str + "," + row   
         str = str + "]"
         prvStr = func(text)
         return prvStr + str
@@ -58,12 +57,29 @@ def experience_dec(func):
                 first = False
             else:
                 str = str + "\n," + row
-    
-    #str = str + "{'title':coder,'company':nus}"
         str = str + "]"
         prvStr = func(text)
         return prvStr + str
     return func_wrapper
+
+def skills_dec(func):
+    def func_wrapper(text):
+
+        table = getSkillSets(text)
+        str = ",\n'Skills & Expertise':[\n"
+        first = True
+        #aggregate experience
+        for row in table:
+            if first:
+                str = str + row
+                first = False
+            else:
+                str = str + "," + row  
+        str = str + "]"
+        prvStr = func(text)
+        return prvStr + str
+    return func_wrapper
+
 
 def testCVDecorator(text):
     temp = get_base
@@ -124,7 +140,6 @@ def extract():
 
 def extractDate(text):
         output ="date"
-        #pattern = "(January|February|March|April|May|June|July|August|September|October|November|December) \d{4}"
         pattern = "[January|February|March|April|May|June|July|August|September|October|November|December]+\s+\d{4}\s+[-]\s+[^\s]+"       
         expression = re.compile(pattern)
         matches = expression.findall(text)
@@ -164,6 +179,9 @@ def getName(text):
     Name = text[0].split("_",1)[0]
     return Name
 
+
+
+
 def getVolunteerExperience(text):
     tempDate = ""
     tempDuration = ""
@@ -173,6 +191,8 @@ def getVolunteerExperience(text):
     start,end = detectStartEndLine(text,"Volunteer Experience")
     output = text[start].split("Volunteer Experience_",1)
     
+    for i in range(start,end):
+        print text[i]
     #volunteer experience section found
     if(len(output)> 1):
         
@@ -180,6 +200,9 @@ def getVolunteerExperience(text):
         tempJob,tempOrg,tempDate,tempDuration = extractExperience(first)
         if((start + 1) <= (end - start)):
             start = start + 1
+            jobRow = "{'Title:'" + tempJob + ","
+            jobRow = jobRow + "'Org:'" + tempOrg + "}"
+            jobTable.append(jobRow)
             tempJob,tempOrg,tempDate,tempDuration = extractExperience(text[start])
             if(len(tempJob)>0 and len(tempOrg)>0):
                 start = start - 1
@@ -203,6 +226,22 @@ def getVolunteerExperience(text):
     else:
         pass
     return jobTable
+
+def getSkillSets(text):
+    skillsTable = []
+    start,end = detectStartEndLine(text,"Skills & Expertise")
+    raw = text[start].split("Skills & Expertise_",1)[1]
+    while(1):
+        output = raw.split("_",1)
+        if(len(output)>1):
+            #print output[0]
+            skillsTable.append(output[0])
+            raw = output[1]
+        else:
+            #print output[0]
+            break
+
+    return skillsTable
 
 def getLanguage(text):
     languageTable = []
@@ -234,14 +273,26 @@ def getExperience(text):
     #print tempCompany
     #print tempDate
     #print tempDuration
+    jobRow = "{'Title:'" + tempJob + ","
+    jobRow = jobRow + "'Company:'" + tempCompany + ","
     
     if((start + 1) <= (end - start)):
         start = start + 1
         tempJob,tempCompany,tempDate,tempDuration = extractExperience(text[start])
         if(len(tempJob)>0 and len(tempCompany)>0):
             start = start - 1
+            jobRow = jobRow + "'Keywords':[]}"
         else:
-            extractKeyWords(text[start])
+            keyWords = extractKeyWords(text[start])
+            jobRow = jobRow + "'Keywords':["
+            for keyWord in keyWords:
+                if first:
+                    jobRow = jobRow + keyWord
+                    first = False
+                else:
+                    jobRow = jobRow + "," + keyWord    
+            jobRow = jobRow + "]}"
+    jobTable.append(jobRow)
             #append keywords to job
     
     for x in range(start + 1, end):
@@ -253,14 +304,26 @@ def getExperience(text):
             #print tempDate
             #print tempDuration
             jobRow = "{'Title:'" + tempJob + ","
-            jobRow = jobRow + "'Company:'" + tempCompany + "}"
-            jobTable.append(jobRow)
-            if(x< end - 1):
+            jobRow = jobRow + "'Company:'" + tempCompany + ","
+           
+            if(x <=end - 1):
                 x = x + 1
                 tempJob,tempCompany,tempDate,tempDuration = extractExperience(text[x])
-                if(len(tempJob)>0 and len(tempCompany)>0):
+                if(len(tempJob)>0 and len(tempCompany)>0 or (x -1) == (end - 1)):
+                    jobRow = jobRow + "'Keywords':[]}"
                     x = x - 1
                 else:
-                    extractKeyWords(text[x])
+                    first = True;
+                    keyWords = extractKeyWords(text[x])
+                    jobRow = jobRow + "'Keywords':[" 
+                    for keyWord in keyWords:
+                        if first:
+                            jobRow = jobRow + keyWord
+                            first = False
+                        else:
+                            jobRow = jobRow + "," + keyWord 
+                    
+                    jobRow = jobRow + "]}"
+            jobTable.append(jobRow)
 
     return jobTable
