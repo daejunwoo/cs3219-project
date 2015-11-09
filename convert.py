@@ -72,6 +72,7 @@ def convertWithCoordinatesPara(fname, pages=None):
     pagenums = set(pages)
 
   infile = file(fname, 'rb')
+  # infile =  open(fname, 'rb')
   parser = PDFParser(infile)
   document = PDFDocument(parser)
 

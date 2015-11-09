@@ -7,6 +7,7 @@ import extract as ex
 import analyze as analyzer
 import string
 import json
+from cStringIO import StringIO
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -22,7 +23,8 @@ def analyzeCV():
 
 @app.route('/')
 def hello():
-  return convertPDF.convert('static/YaminiBhaskar.pdf')
+  # return convertPDF.convertWithCoordinatesPara('static/YaminiBhaskar.pdf')
+  return json.dumps(convertPDF.convertWithCoordinatesPara('static/YaminiBhaskar.pdf'))
 
 @app.route('/keyword')
 def keyWordExtraction():
@@ -45,13 +47,14 @@ def keyWordExtraction():
 @app.route('/upload', methods=['POST'])
 @cross_origin()
 def upload_file():
-  #import pdb;
-  #pdb.set_trace()
-  print "test"
   if request.method == 'POST':
-    file = request.files['files']
-    print file.filename
-  return jsonify({'status': 'created'}), 201
+    upload_files = request.files.getlist("files")
+    for file in upload_files:
+      filename = file.filename
+      save_path = os.path.dirname(os.path.abspath(__file__))+'/static/'
+      file.save(save_path+filename )
+      print json.dumps(convertPDF.convertWithCoordinatesPara('static/'+ filename))
+  # # return jsonify({'status': 'created'}), 201
   
 if __name__ == '__main__':
   app.debug = True
