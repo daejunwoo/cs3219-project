@@ -7,8 +7,8 @@ headerKey = ["Experience","Volunteer Experience","Projects","Languages","Certifi
 
 
 def get_base(text):
-    Name = getName(text)
-    str = "'Name':" + Name
+    name,job = getName(text)
+    str = "'Name':'" + name + "','Title':'" + job + "'" 
     return str
 
 def volunteer_dec(func):
@@ -66,7 +66,7 @@ def skills_dec(func):
     def func_wrapper(text):
 
         table = getSkillSets(text)
-        str = ",\n'Skills & Expertise':[\n"
+        str = ",\n'Skill':[\n"
         first = True
         #aggregate experience
         for row in table:
@@ -176,8 +176,13 @@ def extractExperience(text):
 
 
 def getName(text):
-    Name = text[0].split("_",1)[0]
-    return Name
+    nameJobCompany = text[0]
+    temp = nameJobCompany.split("_",1)
+    name = temp[0]
+    jobCompany = temp[1]
+    temp = jobCompany.split(" at ",1)
+    job = temp[0]
+    return name,job
 
 
 
@@ -229,13 +234,18 @@ def getVolunteerExperience(text):
 
 def getSkillSets(text):
     skillsTable = []
+    raw = ""
     start,end = detectStartEndLine(text,"Skills & Expertise")
-    raw = text[start].split("Skills & Expertise_",1)[1]
+    split = text[start].split("Skills & Expertise_",1)
+    
+    if(len(split)==2):
+        raw = split[1]
     while(1):
         output = raw.split("_",1)
         if(len(output)>1):
             #print output[0]
-            skillsTable.append(output[0])
+            skill = "'" + output[0] + "'"
+            skillsTable.append(skill)
             raw = output[1]
         else:
             #print output[0]
@@ -245,13 +255,17 @@ def getSkillSets(text):
 
 def getLanguage(text):
     languageTable = []
+    raw = ""
     start,end = detectStartEndLine(text,"Languages")
-    raw = text[start].split("Languages_",1)[1]
+    split = text[start].split("Languages_",1)
+    if(len(split)==2):
+        raw = split[1]
     while(1):
         output = raw.split("_",1)
         if(len(output)>1):
             #print output[0]
-            languageTable.append(output[0])
+            language = "'" + output[0] + "'"
+            languageTable.append(language)
             raw = output[1]
         else:
             #print output[0]
@@ -273,25 +287,28 @@ def getExperience(text):
     #print tempCompany
     #print tempDate
     #print tempDuration
-    jobRow = "{'Title:'" + tempJob + ","
-    jobRow = jobRow + "'Company:'" + tempCompany + ","
+    jobRow = "{'Title':'" + tempJob + "',"
+    jobRow = jobRow + " 'Company':'" + tempCompany + "'"
     
-    if((start + 1) <= (end - start)):
+    if((start + 1) <= end):
         start = start + 1
         tempJob,tempCompany,tempDate,tempDuration = extractExperience(text[start])
         if(len(tempJob)>0 and len(tempCompany)>0):
             start = start - 1
-            jobRow = jobRow + "'Keywords':[]}"
+            jobRow = jobRow + ",'Keywords':[]}"
         else:
+
             keyWords = extractKeyWords(text[start])
-            jobRow = jobRow + "'Keywords':["
+            jobRow = jobRow + ",'Keywords':["
             for keyWord in keyWords:
                 if first:
-                    jobRow = jobRow + keyWord
+                    jobRow = jobRow + "'" + keyWord + "'"
                     first = False
                 else:
-                    jobRow = jobRow + "," + keyWord    
+                    jobRow = jobRow + ",'" + keyWord + "'"  
             jobRow = jobRow + "]}"
+    else:
+        jobRow = jobRow + ",'Keywords':[]}"
     jobTable.append(jobRow)
             #append keywords to job
     
@@ -303,27 +320,29 @@ def getExperience(text):
             #print tempCompany
             #print tempDate
             #print tempDuration
-            jobRow = "{'Title:'" + tempJob + ","
-            jobRow = jobRow + "'Company:'" + tempCompany + ","
+            jobRow = "{'Title':'" + tempJob + "',"
+            jobRow = jobRow + "'Company':'" + tempCompany + "'"
            
             if(x <=end - 1):
                 x = x + 1
                 tempJob,tempCompany,tempDate,tempDuration = extractExperience(text[x])
                 if(len(tempJob)>0 and len(tempCompany)>0 or (x -1) == (end - 1)):
-                    jobRow = jobRow + "'Keywords':[]}"
+                    jobRow = jobRow + ",'Keywords':[]}"
                     x = x - 1
                 else:
                     first = True;
                     keyWords = extractKeyWords(text[x])
-                    jobRow = jobRow + "'Keywords':[" 
+                    jobRow = jobRow + ",'Keywords':[" 
                     for keyWord in keyWords:
                         if first:
-                            jobRow = jobRow + keyWord
+                            jobRow = jobRow + "'" + keyWord + "'"
                             first = False
                         else:
-                            jobRow = jobRow + "," + keyWord 
+                            jobRow = jobRow + ",'" + keyWord + "'"
                     
                     jobRow = jobRow + "]}"
+            else:
+                jobRow = jobRow + ",'Keywords':[]}"
             jobTable.append(jobRow)
 
     return jobTable
