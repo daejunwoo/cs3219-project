@@ -3,7 +3,7 @@ import operator
 import re
 import string
 
-headerKey = ["Experience","Volunteer Experience","Projects","Languages","Certifications","Skills & Expertise","Education","Interests"]
+headerKey = ["Experience","Volunteer Experience","Projects","Languages","Certifications","Skills & Expertise","Education","Interests","Publications"]
 
 
 def get_base(text):
@@ -64,6 +64,7 @@ def experience_dec(func):
 
 def skills_dec(func):
     def func_wrapper(text):
+
         table = getSkillSets(text)
         str = ",\n'Skills & Expertise':[\n"
         first = True
@@ -139,7 +140,6 @@ def extract():
 
 def extractDate(text):
         output ="date"
-        #pattern = "(January|February|March|April|May|June|July|August|September|October|November|December) \d{4}"
         pattern = "[January|February|March|April|May|June|July|August|September|October|November|December]+\s+\d{4}\s+[-]\s+[^\s]+"       
         expression = re.compile(pattern)
         matches = expression.findall(text)
@@ -200,6 +200,9 @@ def getVolunteerExperience(text):
         tempJob,tempOrg,tempDate,tempDuration = extractExperience(first)
         if((start + 1) <= (end - start)):
             start = start + 1
+            jobRow = "{'Title:'" + tempJob + ","
+            jobRow = jobRow + "'Org:'" + tempOrg + "}"
+            jobTable.append(jobRow)
             tempJob,tempOrg,tempDate,tempDuration = extractExperience(text[start])
             if(len(tempJob)>0 and len(tempOrg)>0):
                 start = start - 1
@@ -270,14 +273,26 @@ def getExperience(text):
     #print tempCompany
     #print tempDate
     #print tempDuration
+    jobRow = "{'Title:'" + tempJob + ","
+    jobRow = jobRow + "'Company:'" + tempCompany + ","
     
     if((start + 1) <= (end - start)):
         start = start + 1
         tempJob,tempCompany,tempDate,tempDuration = extractExperience(text[start])
         if(len(tempJob)>0 and len(tempCompany)>0):
             start = start - 1
+            jobRow = jobRow + "'Keywords':[]}"
         else:
-            extractKeyWords(text[start])
+            keyWords = extractKeyWords(text[start])
+            jobRow = jobRow + "'Keywords':["
+            for keyWord in keyWords:
+                if first:
+                    jobRow = jobRow + keyWord
+                    first = False
+                else:
+                    jobRow = jobRow + "," + keyWord    
+            jobRow = jobRow + "]}"
+    jobTable.append(jobRow)
             #append keywords to job
     
     for x in range(start + 1, end):
@@ -289,14 +304,26 @@ def getExperience(text):
             #print tempDate
             #print tempDuration
             jobRow = "{'Title:'" + tempJob + ","
-            jobRow = jobRow + "'Company:'" + tempCompany + "}"
-            jobTable.append(jobRow)
-            if(x< end - 1):
+            jobRow = jobRow + "'Company:'" + tempCompany + ","
+           
+            if(x <=end - 1):
                 x = x + 1
                 tempJob,tempCompany,tempDate,tempDuration = extractExperience(text[x])
-                if(len(tempJob)>0 and len(tempCompany)>0):
+                if(len(tempJob)>0 and len(tempCompany)>0 or (x -1) == (end - 1)):
+                    jobRow = jobRow + "'Keywords':[]}"
                     x = x - 1
                 else:
-                    extractKeyWords(text[x])
+                    first = True;
+                    keyWords = extractKeyWords(text[x])
+                    jobRow = jobRow + "'Keywords':[" 
+                    for keyWord in keyWords:
+                        if first:
+                            jobRow = jobRow + keyWord
+                            first = False
+                        else:
+                            jobRow = jobRow + "," + keyWord 
+                    
+                    jobRow = jobRow + "]}"
+            jobTable.append(jobRow)
 
     return jobTable

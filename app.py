@@ -28,14 +28,14 @@ def hello():
 @app.route('/keyword')
 def keyWordExtraction():
   s = ""
-  rawText = convertPDF.convertWithCoordinatesPara('static/DonnabelleEmbodo.pdf')
+  rawText = convertPDF.convertWithCoordinatesPara('static/YaminiBhaskar.pdf')
   temp = ex.get_base
 
-  # dec = ex.experience_dec
-  # temp = dec(temp)
-
-  dec = ex.language_dec
+  dec = ex.experience_dec
   temp = dec(temp)
+
+  #dec = ex.language_dec
+  #temp = dec(temp)
 
   dec = ex.skills_dec
   temp = dec(temp)
