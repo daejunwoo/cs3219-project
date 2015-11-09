@@ -25,7 +25,6 @@ var Dz = React.createClass({
   },
 
   onDrop: function(files) {
-    //console.log('Received files: ', files);
     this.setState({files: files})
   },
 
@@ -82,10 +81,9 @@ var UploadFiles = React.createClass({
         req.attach("files", file, file.name);
     });
     req.end(function(err, res){
-      console.log("err", err);
-      console.log("res", res);
+      console.log("error posting resumes", err);
+      console.log("success posting resumes", res);
     });
-    
   },
 
   render: function() {
@@ -140,22 +138,29 @@ var Results = React.createClass({
   },
 
   loadResultsFromServer: function() {
-    /*
     superagent
-    .get('/results.json')
+    .get('http://localhost:5000/analyzer')
     .end(function(err, res){
       if (res) {
-        console.log("res: ", res);
+        this.setState({data: JSON.parse(res.text)});
       } else {
-        console.log("err: ", err);
+        console.log("error loading results from server: ", err);
       }
-    });
-    */
+    }.bind(this));
   },
 
   render: function() {
+    var titleStyle = {
+      color: "white",
+      background: "#003d7c",
+      fontSize: 50,
+      textAlign: "center",
+      fontFamily: "HelveticaNeue-Light"
+    };
+
     return (
       <div>
+        <div style={titleStyle}>Results</div>
         <ResultList data={this.state.data} />
       </div>
     );
@@ -163,36 +168,59 @@ var Results = React.createClass({
 });
 
 var ResultList = React.createClass({
-    render: function() {
-      var resultNodes = this.props.data.map(function (result) {
-        return (
-          <Result name={result.name}>
-            {result.text}
-          </Result>
-          );
-      });
+  render: function() {
+    var tableStyle = {
+      margin: "auto",
+      padding: 50,
+      fontFamily: "HelveticaNeue-Light",
+      fontSize: 20,
+      color: "white"
+    };
+
+    var headStyle = {
+      color: "#003d7c"
+    };
+
+    var resultNodes = this.props.data.map(function (result) {
       return (
-        <div>
-          {resultNodes}
-        </div>
+        <Result name={result.Name}>
+          {result.Score}
+        </Result>
       );
-    }
-  });
+    });
+    
+    return (
+      <div>
+        <table style={tableStyle}>
+          <thead style={headStyle}>
+            <th>Name | Score</th>
+          </thead>
+          <tbody>
+              {resultNodes}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+});
 
 var Result = React.createClass({
-    render: function() {
-      // the marked library will take Markdown text and convert to raw HTML, sanitize: true tells marked to escape any HTML mark up instead of passing it through unchanged.
-      var rawMarkup = marked(this.props.children.toString(), {sanitize: true});
-      return (
-        <div>
-          <h2>
-            {this.props.name}
-          </h2>
-          <span dangerouslySetInnerHTML={{__html: rawMarkup}} />
-        </div>
-      );
-    }
-  });
+  render: function() {
+    var scoreStyle = {
+      display: "inline-block",
+      right: 0
+    };
+
+    // the marked library will take Markdown text and convert to raw HTML, sanitize: true tells marked to escape any HTML mark up instead of passing it through unchanged.
+    var rawMarkup = marked(this.props.children.toString(), {sanitize: true});
+
+    return (
+      <div>
+        {this.props.name} - <span style={scoreStyle} dangerouslySetInnerHTML={{__html: rawMarkup}} />
+      </div>
+    );
+  }
+});
 
 React.render(
   (
