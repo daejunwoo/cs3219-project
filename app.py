@@ -2,54 +2,38 @@ from flask import Flask,request
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.cors import CORS, cross_origin
 import os
-from cStringIO import StringIO
-from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
-from pdfminer.converter import TextConverter
-from pdfminer.layout import LAParams
-from pdfminer.pdfpage import PDFPage
+import convert as convertPDF
 import extract as ex
+import analyze as analyzer
 import string
+import json
 
 app = Flask(__name__)
 cors = CORS(app)
 app.config.from_pyfile('config.py')
 db = SQLAlchemy(app)
 
-def convert(fname, pages=None):
-  print fname
-  if not pages:
-    pagenums = set()
-  else:
-    pagenums = set(pages)
-  output = StringIO()
-  manager = PDFResourceManager()
-
-  converter = TextConverter(manager, output, laparams=LAParams(word_margin = 0.1))
-  interpreter = PDFPageInterpreter(manager, converter)
-  infile = file(fname, 'rb')
-  for page in PDFPage.get_pages(infile, pagenums):
-    interpreter.process_page(page)
-  infile.close()
-  converter.close()
-  text = output.getvalue()
-  output.close
-  return text.decode('utf8')
+@app.route('/analyzer')
+def analyzeCV():
+  description = {'Title': 'Software Engineer', 'Skill': ['Microsoft Office', 'Data Mining', 'Image Processing'], 'Certification': 'Random value', 'Volunteering': 'Random value'}
+  resume = [{'Name': 'Tom', 'Title': 'Software Engineer at NUS', 'Experience': [{'Title': 'Software Engineer'}], 'Skill': ['Microsoft Office', 'Data Mining'], 'Certification': 'Random value', 'Volunteering': 'Random value'}, {'Name': 'Sam', 'Title': 'Software Engineer at NUS', 'Experience': [{'Title': 'Software Engineer'}], 'Skill': ['Microsoft Office', 'Data Mining'], 'Certification': 'Random value'}]
+  multiplier = analyzer.assign_key_multipler(description)
+  result = analyzer.process_cv(resume, multiplier, description)
+  return json.dumps(result)
 
 @app.route('/')
 def hello():
-  return convert('static/DesmondLim.pdf')
+  return convertPDF.convert('static/YaminiBhaskar.pdf')
 
 @app.route('/keyword')
-def keyWordExtraction():  
-  rawText = convert('static/DesmondLim.pdf')
-  keyWords = ex.extractKeyWords(rawText)
-  s = "/".join(keyWords)
+def keyWordExtraction():
+  s = ""
+  rawText = convertPDF.convertWithCoordinates('static/YaminiBhaskar.pdf')
+  #keyWords = ex.extractKeyWords(rawText)
+  #s = "/".join(keyWords)
+  print rawText
   return s
   
-@app.route('/<name>')
-def hello_name(name):
-  return "Hello {}!".format(name)
-
 @app.route('/upload', methods=['POST'])
 @cross_origin()
 def upload_file():
@@ -62,4 +46,5 @@ def upload_file():
   return jsonify({'status': 'created'}), 201
   
 if __name__ == '__main__':
+  app.debug = True
   app.run()
