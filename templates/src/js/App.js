@@ -188,7 +188,7 @@ var Results = React.createClass({
     .get('http://localhost:5000/analyzer')
     .end(function(err, res){
       if (res) {
-        //console.log(res);
+        console.log(res);
         this.setState({data: JSON.parse(res.text)});
       } else {
         console.log("error loading results from server: ", err);

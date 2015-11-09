@@ -69,8 +69,3 @@ def recurse_obj(resume_obj, description_obj, header):
 def process_analyzer(job_description, extracted_resumes):
   key_multipler = assign_key_multipler(job_description)
   return process_cv(extracted_resumes, key_multipler, job_description)
-
-
-
-
-
