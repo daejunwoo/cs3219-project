@@ -1,4 +1,4 @@
-# CS3219-CViA - Installation Instructions #
+# CS3219-CViA: Installation Instructions #
 
 ##Back-end:##
 1. navigate to the root folder of the project
