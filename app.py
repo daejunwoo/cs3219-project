@@ -20,7 +20,7 @@ job_description = {}
 
 @app.route('/analyzer')
 def analyzeCV():
-  description = {'Title': 'Software Engineer', 'Skill': ['Microsoft Office', 'Data Mining', 'Image Processing'], 'Certification': 'Random value', 'Volunteering': 'Random value'}
+  # description = {'Title': 'Software Engineer', 'Skill': ['Microsoft Office', 'Data Mining', 'Image Processing'], 'Certification': 'Random value', 'Volunteering': 'Random value'}
   #resume = [{'Name': 'Tom', 'Title': 'Software Engineer at NUS', 'Experience': [{'Title': 'Software Engineer'}], 'Skill': ['Microsoft Office', 'Data Mining'], 'Certification': 'Random value', 'Volunteering': 'Random value'}, {'Name': 'Sam', 'Title': 'Software Engineer at NUS', 'Experience': [{'Title': 'Software Engineer'}], 'Skill': ['Microsoft Office', 'Data Mining']}]
   
   #setup extractor with base and decorators
@@ -54,9 +54,10 @@ def analyzeCV():
     else:
       analyzerResumesInput = analyzerResumesInput + "," + resume
 
+  print job_description
   analyzerResumesInput = analyzerResumesInput + "]"
   analyzerDictResumesInput = ast.literal_eval(analyzerResumesInput)
-  result = analyzer.process_analyzer(description, analyzerDictResumesInput)
+  result = analyzer.process_analyzer(job_description, analyzerDictResumesInput)
   return json.dumps(result)
 
 @app.route('/')
@@ -105,9 +106,25 @@ def keyWordExtraction():
 @cross_origin()
 def upload_file():
   if request.method == 'POST':
-    title_multiplier = request.form['title']
-    skills_multiplier = request.form['skills']
-    more_multiplier = request.form['more']
+    title = request.form['title']
+    skill = request.form['skills']
+    other1, other1value = "", ""
+    other2, other2value = "", ""
+    other3, other3value = "", ""
+    if request.form['other1'] != "" and request.form['other1value'] != "":
+      other1 = request.form['other1']
+      other1value = request.form['other1value'].split(',')
+    if request.form['other2'] != "" and request.form['other2value'] != "":
+      other2 = request.form['other2']
+      other2value = request.form['other2value'].split(',')
+    if request.form['other3'] != "" and request.form['other3value'] != "":
+      other3 = request.form['other3']
+      other3value = request.form['other3value'].split(',')
+
+    skill_list = skill.split(',')
+    global job_description 
+    job_description = {'Title': title, 'Skill': skill_list, other1: other1value, other2: other2value, other3: other3value}
+
     upload_files = request.files.getlist("files")
 
     #clear static directory
