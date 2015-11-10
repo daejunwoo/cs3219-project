@@ -25,6 +25,7 @@ def assign_key_multipler(job_description):
 
 def process_cv(extracted_resumes, key_multipler, job_description):
   result_list = []
+  key_checked = []
 
   for resume in extracted_resumes:
     title_count, skill_count, generic_count = 0,0,0
@@ -47,7 +48,8 @@ def process_cv(extracted_resumes, key_multipler, job_description):
       elif resume.has_key(header_skill) and multipler == header_skill:
         skill_count += recurse_obj(resume[multipler], job_description[multipler], multipler) * key_multipler[multipler]
 
-      elif resume.has_key(multipler):
+      elif resume.has_key(multipler) and multipler not in key_checked:
+        key_checked.append(multipler)
         if isinstance(resume[multipler], list) and isinstance(resume[multipler][0], basestring):
           generic_count += recurse_obj(resume[multipler], job_description[multipler], multipler) * key_multipler[multipler]
         elif isinstance(resume[multipler], basestring):
@@ -71,7 +73,7 @@ def recurse_obj(resume_obj, description_obj, header):
     for el in extract_list:
       if el[1] > 90:
         count += 1
-      elif el > 60:
+      elif el[1] > 60:
         count += 0.5
   return count
 

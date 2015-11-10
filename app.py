@@ -32,6 +32,7 @@ def analyzeCV():
   extractor = decorator(extractor)
   decorator = decorators["Language"]
   extractor = decorator(extractor)
+
   #retrieve files from static
   resumesDir = os.listdir('static')
   resumeFiles = []
