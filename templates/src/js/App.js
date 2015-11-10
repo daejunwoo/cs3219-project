@@ -80,13 +80,23 @@ var Dz = React.createClass({
       borderColor: '#003d7c',
       borderStyle: 'dashed',
       borderRadius: 5,
-      margin: "auto",
+      float: "right",
       padding: "10px",
       color: "white"
     };
 
     var parentStyle = {
       color: "white"
+    };
+  
+    var fieldsStyle = {
+      float: "left"
+    };
+
+    var formStyle = {
+      padding: "100px",
+      width: "50vw",
+      margin: "auto"
     };
 
     return (
@@ -102,15 +112,15 @@ var Dz = React.createClass({
               <td><textarea type="text" value={this.state.skills} placeholder="What?" onChange={this.handleChange2} /></td>
             </tr>
             <tr>
-              <td><input type="text" value={this.state.other1} placeholder="<fill in heading>" onChange={this.handleChange3} />:</td>
+              <td><input type="text" value={this.state.other1} placeholder="<fill in heading>" onChange={this.handleChange3} />{" "}:</td>
               <td><input type="text" value={this.state.other1value} placeholder="<fill in description>" onChange={this.handleChange4} /></td>
             </tr>
             <tr>
-              <td><input type="text" value={this.state.other2} placeholder="<fill in heading>" onChange={this.handleChange5} />:</td>
+              <td><input type="text" value={this.state.other2} placeholder="<fill in heading>" onChange={this.handleChange5} />{" "}:</td>
               <td><input type="text" value={this.state.other2value} placeholder="<fill in description>" onChange={this.handleChange6} /></td>
             </tr>
             <tr>
-              <td><input type="text" value={this.state.other3} placeholder="<fill in heading>" onChange={this.handleChange7} />:</td>
+              <td><input type="text" value={this.state.other3} placeholder="<fill in heading>" onChange={this.handleChange7} />{" "}:</td>
               <td><input type="text" value={this.state.other3value} placeholder="<fill in description>" onChange={this.handleChange8} /></td>
             </tr>
           </table>
@@ -246,16 +256,17 @@ var Results = React.createClass({
 });
 
 var ResultList = React.createClass({
-    render: function() {
-      var conStyle = {
-        textAlign: "center"
-      };
+  render: function() {
+    var conStyle = {
+      textAlign: "center",
+      paddingTop: 50
+    };
 
-      var titleStyle = {
-        fontSize: 30,
-        color: "#003d7c",
-        fontFamily: "HelveticaNeue-Light"
-      };
+    var titleStyle = {
+      fontSize: 30,
+      color: "#003d7c",
+      fontFamily: "HelveticaNeue-Light"
+    };
 
     var headStyle = {
       color: "#003d7c"
@@ -263,23 +274,16 @@ var ResultList = React.createClass({
 
     var resultNodes = this.props.data.map(function (result) {
       return (
-        <div style={conStyle}>
-          <div style={titleStyle}>Name | Score</div>
-          {resultNodes}
-        </div>
+        <Result name={result.Name}>
+            {result.Score}
+        </Result>
       );
     });
     
     return (
-      <div>
-        <table style={tableStyle}>
-          <thead style={headStyle}>
-            <th>Name | Score</th>
-          </thead>
-          <tbody>
-              {resultNodes}
-          </tbody>
-        </table>
+      <div style={conStyle}>
+        <div style={titleStyle}>Name | Score</div>
+        {resultNodes}
       </div>
     );
   }
