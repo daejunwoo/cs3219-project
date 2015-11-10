@@ -24,12 +24,12 @@ def analyzeCV():
   #resume = [{'Name': 'Tom', 'Title': 'Software Engineer at NUS', 'Experience': [{'Title': 'Software Engineer'}], 'Skill': ['Microsoft Office', 'Data Mining'], 'Certification': 'Random value', 'Volunteering': 'Random value'}, {'Name': 'Sam', 'Title': 'Software Engineer at NUS', 'Experience': [{'Title': 'Software Engineer'}], 'Skill': ['Microsoft Office', 'Data Mining']}]
   
   #setup extractor with base and decorators
-  decorators = {'Skill':ex.skills_dec , 'Language':ex.language_dec}
-  decorators = {'Skill':ex.skills_dec , 'Language':ex.language_dec}
+  decorators = {'Skill':ex.skills_dec , 'Language':ex.language_dec , 'Experience':ex.experience_dec}
   extractor = ex.get_base
+  decorator = decorators["Experience"]
+  extractor = decorator(extractor)
   decorator = decorators["Language"]
   extractor = decorator(extractor)
-
   #retrieve files from static
   resumesDir = os.listdir('static')
   resumeFiles = []
@@ -69,10 +69,21 @@ def keyWordExtraction():
   description = {'Title': 'Software Engineer', 'Skill': ['Microsoft Office', 'Data Mining', 'Image Processing','Android','MySQL'], 'Certification': 'Random value', 'Volunteering': 'Random value'}
   resumesInput = []
   resumes = []
-  decorators = {'Skill':ex.skills_dec , 'Language':ex.language_dec}
+  decorators = {'Skill':ex.skills_dec , 'Language':ex.language_dec , 'Experience':ex.experience_dec}
+  
   extractor = ex.get_base
-  decorator = decorators["Language"]
+  decorator = ex.experience_dec
   extractor = decorator(extractor)
+  for key in job_description:
+    decorator = decorators.get(key)
+    if decorator!= None:
+      extractor = decorator(extractor)
+
+  
+  # decorator = decorators["Language"]
+  # extractor = decorator(extractor)
+  # decorator = decorators["Experience"]
+  # extractor = decorator(extractor)
 
   resumesInput.append('static/IsenNg.pdf')
   resumesInput.append('static/DonnabelleEmbodo.pdf')
