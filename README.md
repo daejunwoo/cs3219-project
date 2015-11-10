@@ -2,7 +2,7 @@
 
 ##Back-end:##
 1. navigate to the root folder of the project
-2. run `pip install -r requirements.txt' to install dependencies
+2. run `pip install -r requirements.txt` to install dependencies
 3. run `python app.py` to start the server
 
 ##Front-end:##
