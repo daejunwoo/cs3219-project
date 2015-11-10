@@ -26,6 +26,8 @@ def analyzeCV():
   #setup extractor with base and decorators
   decorators = {'Skill':ex.skills_dec , 'Language':ex.language_dec , 'Experience':ex.experience_dec}
   extractor = ex.get_base
+  decorator = decorators["Skill"]
+  extractor = decorator(extractor)
   decorator = decorators["Experience"]
   extractor = decorator(extractor)
   decorator = decorators["Language"]
@@ -69,8 +71,8 @@ def keyWordExtraction():
   description = {'Title': 'Software Engineer', 'Skill': ['Microsoft Office', 'Data Mining', 'Image Processing','Android','MySQL'], 'Certification': 'Random value', 'Volunteering': 'Random value'}
   resumesInput = []
   resumes = []
+
   decorators = {'Skill':ex.skills_dec , 'Language':ex.language_dec , 'Experience':ex.experience_dec}
-  
   extractor = ex.get_base
   decorator = ex.experience_dec
   extractor = decorator(extractor)
