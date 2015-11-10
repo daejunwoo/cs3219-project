@@ -1,4 +1,6 @@
 import string
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
 
 header_title = 'Title'
 header_experience = 'Experience'
@@ -31,14 +33,14 @@ def process_cv(extracted_resumes, key_multipler, job_description):
       if resume.has_key(header_title) and multipler == header_title:
 
         # matching first level title
-        if job_description[header_title] in resume[header_title]:
+        if fuzz.token_sort_ratio(job_description[header_title], resume[header_title]) > 80:
           title_count += key_multipler[multipler]
 
          # recurse in experience
         if resume.has_key(header_experience):
           for experience in resume[header_experience]:
             if experience.has_key(header_title):
-              if job_description[header_title] in experience[header_title]:
+              if fuzz.token_sort_ratio(job_description[header_title], experience[header_title]) > 80:
                 title_count += key_multipler[multipler]
 
       # Matching skills
@@ -46,10 +48,10 @@ def process_cv(extracted_resumes, key_multipler, job_description):
         skill_count += recurse_obj(resume[multipler], job_description[multipler], multipler) * key_multipler[multipler]
 
       elif resume.has_key(multipler):
-        if isinstance(resume[multipler], list):
+        if isinstance(resume[multipler], list) and isinstance(resume[multipler][0], basestring):
           generic_count += recurse_obj(resume[multipler], job_description[multipler], multipler) * key_multipler[multipler]
         elif isinstance(resume[multipler], basestring):
-          if job_description[multipler] in resume[multipler]:
+          if fuzz.token_sort_ratio(resume[multipler], job_description[multipler]) > 65:
             generic_count += key_multipler[multipler]
 
     score = title_count+skill_count+generic_count
@@ -61,9 +63,12 @@ def process_cv(extracted_resumes, key_multipler, job_description):
 
 def recurse_obj(resume_obj, description_obj, header):
   count = 0
+  choices = description_obj
   for item in resume_obj:
-    if item in description_obj:
-      count += 1
+    extract_list = process.extract(item, choices, limit=2)
+    for el in extract_list:
+      if el[1] > 65:
+        count +=1
   return count
 
 def process_analyzer(job_description, extracted_resumes):

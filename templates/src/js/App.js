@@ -15,7 +15,7 @@ var history = useBasename(createHistory)({
   basename: '/transitions'
 });
 
-var UploadForm = React.createClass({
+var Dz = React.createClass({
   getInitialState: function() {
     return {
       files: [],
@@ -80,24 +80,13 @@ var UploadForm = React.createClass({
       borderColor: '#003d7c',
       borderStyle: 'dashed',
       borderRadius: 5,
-      //margin: "auto",
-      float: "right",
+      margin: "auto",
       padding: "10px",
       color: "white"
     };
 
     var parentStyle = {
       color: "white"
-    };
-
-    var fieldsStyle = {
-      float: "left"
-    };
-
-    var formStyle = {
-      padding: "100px",
-      width: "50vw",
-      margin: "auto"
     };
 
     return (
@@ -130,7 +119,7 @@ var UploadForm = React.createClass({
         <Dropzone onDrop={this.onDrop} style={dzStyle}>
           <div>Simply drop or click to attach the Resumes here.</div>
         </Dropzone>
-
+        
         {this.state.files.length > 0 ? 
         <div style={parentStyle}>
           <h2>{this.state.files.length} file(s):</h2>
@@ -154,7 +143,7 @@ var UploadFiles = React.createClass({
     var files = this.props.files;
 
     this.history.pushState(null, 'results');
-
+    
     var req = superagent.post('http://localhost:5000/upload');
 
     req.field("title", this.props.jobTitle);
@@ -169,16 +158,10 @@ var UploadFiles = React.createClass({
     files.forEach((file)=> {
         req.attach("files", file, file.name);
     });
-
     req.end(function(err, res){
-      if (res) {
-        console.log("res", res);
-        //this.history.pushState(null, 'results');
-      } else {
-        console.log("err", err);
-      }
+      console.log("error posting resumes", err);
+      console.log("success posting resumes", res);
     });
-    
   },
 
   render: function() {
@@ -215,7 +198,8 @@ var UploadBox = React.createClass({
     return (
       <div style={parentStyle}>
         <div style={titleStyle}>CS3219 Project - CViA</div>
-        <UploadForm />
+        <br />
+        <Dz />
       </div>
     );
   }
@@ -236,7 +220,6 @@ var Results = React.createClass({
     .get('http://localhost:5000/analyzer')
     .end(function(err, res){
       if (res) {
-        console.log(res);
         this.setState({data: JSON.parse(res.text)});
       } else {
         console.log("error loading results from server: ", err);
@@ -249,8 +232,8 @@ var Results = React.createClass({
       color: "white",
       background: "#003d7c",
       fontSize: 50,
-      fontFamily: "HelveticaNeue-Light",
-      textAlign: "center"
+      textAlign: "center",
+      fontFamily: "HelveticaNeue-Light"
     };
 
     return (
@@ -274,22 +257,33 @@ var ResultList = React.createClass({
         fontFamily: "HelveticaNeue-Light"
       };
 
-      var resultNodes = this.props.data.map(function (result) {
-        return (
-          <Result name={result.Name}>
-            {result.Score}
-          </Result>
-          );
-      });
+    var headStyle = {
+      color: "#003d7c"
+    };
 
+    var resultNodes = this.props.data.map(function (result) {
       return (
         <div style={conStyle}>
           <div style={titleStyle}>Name | Score</div>
           {resultNodes}
         </div>
       );
-    }
-  });
+    });
+    
+    return (
+      <div>
+        <table style={tableStyle}>
+          <thead style={headStyle}>
+            <th>Name | Score</th>
+          </thead>
+          <tbody>
+              {resultNodes}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+});
 
 var Result = React.createClass({
     render: function() {
