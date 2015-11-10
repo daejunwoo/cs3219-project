@@ -111,19 +111,22 @@ def upload_file():
     other1, other1value = "", ""
     other2, other2value = "", ""
     other3, other3value = "", ""
+    global job_description
+    skill_list = skill.split(',')
+
+    job_description = {'Title': title, 'Skill': skill_list}
     if request.form['other1'] != "" and request.form['other1value'] != "":
       other1 = request.form['other1']
       other1value = request.form['other1value'].split(',')
+      job_description.update({other1: other1value})
     if request.form['other2'] != "" and request.form['other2value'] != "":
       other2 = request.form['other2']
       other2value = request.form['other2value'].split(',')
+      job_description.update({other2: other2value})
     if request.form['other3'] != "" and request.form['other3value'] != "":
       other3 = request.form['other3']
       other3value = request.form['other3value'].split(',')
-
-    skill_list = skill.split(',')
-    global job_description 
-    job_description = {'Title': title, 'Skill': skill_list, other1: other1value, other2: other2value, other3: other3value}
+      job_description.update({other3: other3value})
 
     upload_files = request.files.getlist("files")
 
