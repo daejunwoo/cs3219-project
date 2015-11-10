@@ -7,5 +7,5 @@
 
 ##Front-end:##
 1. navigate to the root folder of the project
-2. in the terminal, run `npm install -g gulp` then run `gulp`
+2. run `npm install -g gulp` then run `gulp`
 3. open up the file ‘dist/index.html’ in the web browser
