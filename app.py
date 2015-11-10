@@ -20,9 +20,7 @@ job_description = {}
 
 @app.route('/analyzer')
 def analyzeCV():
-  # description = {'Title': 'Software Engineer', 'Skill': ['Microsoft Office', 'Data Mining', 'Image Processing'], 'Certification': 'Random value', 'Volunteering': 'Random value'}
-  #resume = [{'Name': 'Tom', 'Title': 'Software Engineer at NUS', 'Experience': [{'Title': 'Software Engineer'}], 'Skill': ['Microsoft Office', 'Data Mining'], 'Certification': 'Random value', 'Volunteering': 'Random value'}, {'Name': 'Sam', 'Title': 'Software Engineer at NUS', 'Experience': [{'Title': 'Software Engineer'}], 'Skill': ['Microsoft Office', 'Data Mining']}]
-  
+
   #setup extractor with base and decorators
   decorators = {'Skill':ex.skills_dec , 'Language':ex.language_dec , 'Experience':ex.experience_dec}
   extractor = ex.get_base
@@ -82,7 +80,6 @@ def keyWordExtraction():
     if decorator!= None:
       extractor = decorator(extractor)
 
-  
   # decorator = decorators["Language"]
   # extractor = decorator(extractor)
   # decorator = decorators["Experience"]
@@ -158,7 +155,7 @@ def upload_file():
       filename = file.filename
       save_path = os.path.dirname(os.path.abspath(__file__))+'/static/'
       file.save(save_path+filename)
-      #print json.dumps(convertPDF.convertWithCoordinatesPara('static/'+ filename))
+
   return json.dumps({'status': '200'})
 
 if __name__ == '__main__':
