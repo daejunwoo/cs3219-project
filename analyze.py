@@ -33,14 +33,14 @@ def process_cv(extracted_resumes, key_multipler, job_description):
       if resume.has_key(header_title) and multipler == header_title:
 
         # matching first level title
-        if fuzz.token_sort_ratio(job_description[header_title], resume[header_title]) > 80:
+        if fuzz.partial_ratio(job_description[header_title], resume[header_title]) > 80:
           title_count += key_multipler[multipler]
 
          # recurse in experience
         if resume.has_key(header_experience):
           for experience in resume[header_experience]:
             if experience.has_key(header_title):
-              if fuzz.token_sort_ratio(job_description[header_title], experience[header_title]) > 80:
+              if fuzz.partial_ratio(job_description[header_title], experience[header_title]) > 80:
                 title_count += key_multipler[multipler]
 
       # Matching skills
@@ -67,8 +67,10 @@ def recurse_obj(resume_obj, description_obj, header):
   for item in resume_obj:
     extract_list = process.extract(item, choices, limit=2)
     for el in extract_list:
-      if el[1] > 65:
-        count +=1
+      if el[1] > 90:
+        count += 1
+      elif el > 60:
+        count += 0.5
   return count
 
 def process_analyzer(job_description, extracted_resumes):
