@@ -51,8 +51,10 @@ def process_cv(extracted_resumes, key_multipler, job_description):
         if isinstance(resume[multipler], list) and isinstance(resume[multipler][0], basestring):
           generic_count += recurse_obj(resume[multipler], job_description[multipler], multipler) * key_multipler[multipler]
         elif isinstance(resume[multipler], basestring):
-          if fuzz.token_sort_ratio(resume[multipler], job_description[multipler]) > 65:
+          if fuzz.token_sort_ratio(resume[multipler], job_description[multipler]) > 90:
             generic_count += key_multipler[multipler]
+          elif fuzz.token_sort_ratio(resume[multipler], job_description[multipler]) > 60:
+            generic_count += key_multipler[multipler] * 0.5
 
     score = title_count+skill_count+generic_count
     result_list.append({'Name': resume['Name'], 'Score': round(score, 2)})
